@@ -12,17 +12,21 @@ import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
-
 /**
- * TODO: 
- * 1. The {@link LinkedIntQueue} has no bugs. We've provided you with some example test cases.
- * Write your own unit tests to test against IntQueue interface with specification testing method 
+ * TODO:
+ * 1. The {@link LinkedIntQueue} has no bugs. We've provided you with some
+ * example test cases.
+ * Write your own unit tests to test against IntQueue interface with
+ * specification testing method
  * using mQueue = new LinkedIntQueue();
  * 
- * 2. 
- * Comment `mQueue = new LinkedIntQueue();` and uncomment `mQueue = new ArrayIntQueue();`
- * Use your test cases from part 1 to test ArrayIntQueue and find bugs in the {@link ArrayIntQueue} class
- * Write more unit tests to test the implementation of ArrayIntQueue, with structural testing method
+ * 2.
+ * Comment `mQueue = new LinkedIntQueue();` and uncomment `mQueue = new
+ * ArrayIntQueue();`
+ * Use your test cases from part 1 to test ArrayIntQueue and find bugs in the
+ * {@link ArrayIntQueue} class
+ * Write more unit tests to test the implementation of ArrayIntQueue, with
+ * structural testing method
  * Aim to achieve 100% line coverage for ArrayIntQueue
  *
  * @author Alex Lockwood, George Guo, Terry Li
@@ -38,8 +42,8 @@ public class IntQueueTest {
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-    //    mQueue = new ArrayIntQueue();
+        // mQueue = new LinkedIntQueue();
+        mQueue = new ArrayIntQueue();
 
         testList = new ArrayList<>(List.of(1, 2, 3));
     }
@@ -53,19 +57,25 @@ public class IntQueueTest {
     @Test
     public void testNotEmpty() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(1);
+        assertFalse(mQueue.isEmpty());
     }
 
     @Test
     public void testPeekEmptyQueue() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        assertNull(mQueue.peek());
     }
 
     @Test
     public void testPeekNoEmptyQueue() {
         // TODO: write your own unit test
-        fail("Test not implemented");
+        for (Integer num : testList) {
+            mQueue.enqueue(num);
+        }
+        Integer head = mQueue.peek();
+        assertEquals(Integer.valueOf(1), head);
+        // assertEquals(2, mQueue.size());
     }
 
     @Test
@@ -80,8 +90,15 @@ public class IntQueueTest {
 
     @Test
     public void testDequeue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        for (Integer num : testList) {
+            mQueue.enqueue(num);
+        }
+        int initialSize = mQueue.size();
+        for (int i = 0; i < testList.size(); i++) {
+            assertEquals(testList.get(i), mQueue.dequeue());
+            assertEquals(initialSize - i - 1, mQueue.size());
+        }
+        assertNull(mQueue.dequeue());
     }
 
     @Test
@@ -105,5 +122,42 @@ public class IntQueueTest {
         }
     }
 
+    @Test
+    public void testClear() {
+        for (Integer num : testList) {
+            mQueue.enqueue(num);
+        }
+        assertFalse(mQueue.isEmpty());
+
+        mQueue.clear();
+        assertTrue(mQueue.isEmpty());
+    }
+
+    @Test
+    public void testEnsureCapacity() {
+        int initialCapacity = 10;
+        for (int i = 0; i < initialCapacity; i++) {
+            mQueue.enqueue(i);
+        }
+
+        mQueue.dequeue();
+
+        assertEquals(initialCapacity - 1, mQueue.size());
+
+        mQueue.enqueue(initialCapacity);
+        mQueue.enqueue(initialCapacity + 1);
+
+        assertEquals(initialCapacity + 1, mQueue.size());
+
+        for (int i = 1; i <= initialCapacity + 1; i++) {
+            assertEquals(Integer.valueOf(i), mQueue.dequeue());
+        }
+        
+        // The queue should be empty now
+        assertTrue(mQueue.isEmpty());
+
+        mQueue.enqueue(123);
+        assertEquals(Integer.valueOf(123), mQueue.peek());
+    }
 
 }
